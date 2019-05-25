@@ -15,6 +15,10 @@
 #include "Group.h"
 #include "Stat.h"
 
+
+
+const FText ARPGFrameworkCharacter::healthStatName = GetTextFromLiteral(TEXT("Health"));
+
 ARPGFrameworkCharacter::ARPGFrameworkCharacter()
 {
 	// Set size for player capsule
@@ -59,12 +63,18 @@ ARPGFrameworkCharacter::ARPGFrameworkCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	MaximiseStats();
+	AddStat(UStat::CreateStat(ARPGFrameworkCharacter::healthStatName, 1000, 1000));
+
+	MaximiseStats();	
+}
+
+void ARPGFrameworkCharacter::SetupWithLoadout(FLoadout loadout) {
+
 }
 
 void ARPGFrameworkCharacter::Tick(float DeltaSeconds)
 {
-    Super::Tick(DeltaSeconds);
+	Super::Tick(DeltaSeconds);
 
 	if (CursorToWorld != nullptr)
 	{
@@ -94,10 +104,10 @@ void ARPGFrameworkCharacter::Tick(float DeltaSeconds)
 	}
 }
 
-UStat* ARPGFrameworkCharacter::GetStatByName(FString statName)
+UStat* ARPGFrameworkCharacter::GetStatByName(FText statName)
 {
 	for (UStat* stat : stats) {
-		if (stat->GetStatName().Equals(statName))
+		if (stat->GetStatName().EqualTo(statName))
 			return stat;
 	}
 	return NewObject<UStat>();
@@ -105,26 +115,41 @@ UStat* ARPGFrameworkCharacter::GetStatByName(FString statName)
 
 float ARPGFrameworkCharacter::GetCurrentHealth()
 {
-	//return GetStatByName("CurrentHealth")->getMa;
-	return 0;
+	return GetHealthStat()->GetCurrentValue();
+}
+
+UStat* ARPGFrameworkCharacter::GetHealthStat()
+{
+	return GetStatByName(ARPGFrameworkCharacter::healthStatName);
+}
+
+FText ARPGFrameworkCharacter::GetTextFromLiteral(FName text)
+{
+	return FText::FromName(text);
 }
 
 void ARPGFrameworkCharacter::SetCurrentHealth(float val)
 {
-
+	GetHealthStat()->SetCurrentValue(val);
 }
 
 float ARPGFrameworkCharacter::GetMaxHealth()
 {
-	return 0;	
+	return GetHealthStat()->GetMaxValue();
 }
 
 void ARPGFrameworkCharacter::SetMaxHealth(float val)
 {
-
+	GetHealthStat()->SetMaxValue(val);
 }
 
 void ARPGFrameworkCharacter::MaximiseStats()
 {
 	SetCurrentHealth(GetMaxHealth());
+}
+
+void ARPGFrameworkCharacter::AddStat(UStat* newStat)
+{
+	if (GetStatByName(newStat->GetStatName()) == NULL)
+		GetStats().Add(newStat);
 }

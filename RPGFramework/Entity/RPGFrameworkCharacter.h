@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Loadout.h"
 #include "RPGFrameworkCharacter.generated.h"
 
 class UGroup;
@@ -15,26 +16,32 @@ class ARPGFrameworkCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	static const FText healthStatName;
 	ARPGFrameworkCharacter();
+
+	UFUNCTION(BlueprintCallable, Category = "Loadout")
+		void SetupWithLoadout(FLoadout loadout);
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
 	/** Returns TopDownCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
-	UFUNCTION(BlueprintCallable, Category = "Name")
-		FString GetCharacterName() { return name; }
-
-	UFUNCTION(BlueprintCallable, Category = "Name")
-		void SetCharacterName(FString val);
-
 	UFUNCTION(BlueprintCallable, Category = "Health")
 		float GetCurrentHealth();
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+		UStat* GetHealthStat();
+
+	UFUNCTION(BlueprintCallable, Category = "Text")
+		static FText GetTextFromLiteral(FName text);
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
 		void SetCurrentHealth(float val);
@@ -55,7 +62,13 @@ public:
 		TArray<UStat *>& GetStats() { return stats; }
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-		UStat* GetStatByName(FString name);
+		UStat* GetStatByName(FText statName);
+
+	UFUNCTION(BlueprintCallable, Category = "Name")
+		FText GetCharacterName() { return characterName; }
+
+	UFUNCTION(BlueprintCallable, Category = "Name")
+		void SetCharacterName(FText val) { characterName = val; }
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -69,14 +82,18 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
-	UGroup* group;
-
-	TArray<UStat*> stats;
+	UPROPERTY(EditAnywhere, Category = "Group")
+		UGroup* group;
 
 	UPROPERTY(EditAnywhere, Category = "Name")
-		FString name;
+		TArray<UStat*> stats;
+
+	UPROPERTY(EditAnywhere, Category = "Name")
+		FText characterName;
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 		void MaximiseStats();
-};
 
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+		void AddStat(UStat* newStat);
+};
