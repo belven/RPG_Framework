@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "RPGFrameworkCharacter.generated.h"
 
+class UGroup;
+class UStat;
+
 UCLASS(Blueprintable)
 class ARPGFrameworkCharacter : public ACharacter
 {
@@ -24,36 +27,35 @@ public:
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
+	UFUNCTION(BlueprintCallable, Category = "Name")
+		FString GetCharacterName() { return name; }
 
 	UFUNCTION(BlueprintCallable, Category = "Name")
-		FString GetName() { return name; }
-
-	UFUNCTION(BlueprintCallable, Category = "Name")
-		void SetName(FString val) { name = val; }
+		void SetCharacterName(FString val);
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
-		float GetCurrentHealth() { return currentHealth; }
+		float GetCurrentHealth();
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
-		void SetCurrentHealth(float val) { currentHealth = val; }
+		void SetCurrentHealth(float val);
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
-		float GetMaxHealth() { return maxHealth; }
+		float GetMaxHealth();
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
-		void SetMaxHealth(float val) { maxHealth = val; }
+		void SetMaxHealth(float val);
 
-	UFUNCTION(BlueprintCallable, Category = "Shield")
-		float GetCurrentShield() { return currentShield; }
+	UFUNCTION(BlueprintCallable, Category = "Group")
+		UGroup* GetGroup() { return group; }
 
-	UFUNCTION(BlueprintCallable, Category = "Shield")
-		void SetCurrentShield(float val) { currentShield = val; }
+	UFUNCTION(BlueprintCallable, Category = "Group")
+		void SetGroup(UGroup* val) { group = val; }
 
-	UFUNCTION(BlueprintCallable, Category = "Shield")
-		float GetMaxShield() { return maxShield; }
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+		TArray<UStat *>& GetStats() { return stats; }
 
-	UFUNCTION(BlueprintCallable, Category = "Shield")
-		void SetMaxShield(float val) { maxShield = val; }
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+		UStat* GetStatByName(FString name);
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -67,20 +69,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
+	UGroup* group;
+
+	TArray<UStat*> stats;
+
 	UPROPERTY(EditAnywhere, Category = "Name")
 		FString name;
-
-	UPROPERTY(EditAnywhere, Category = "Health")
-		float currentHealth;
-
-	UPROPERTY(EditAnywhere, Category = "Health")
-		float maxHealth;
-
-	UPROPERTY(EditAnywhere, Category = "Shield")
-		float currentShield;
-
-	UPROPERTY(EditAnywhere, Category = "Shield")
-		float maxShield;
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 		void MaximiseStats();

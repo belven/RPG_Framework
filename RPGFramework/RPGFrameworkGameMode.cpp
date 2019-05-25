@@ -4,6 +4,7 @@
 #include "Controllers/RPGFrameworkPlayerController.h"
 #include "Entity/RPGFrameworkCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UI/RPGHUD.h"
 
 ARPGFrameworkGameMode::ARPGFrameworkGameMode()
 {
@@ -16,4 +17,8 @@ ARPGFrameworkGameMode::ARPGFrameworkGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<AHUD> hud(TEXT("/Game/TopDown/Blueprints/UI/MainHUD.MainHUD_C"));
+	// set default pawn class to our character class
+	HUDClass = hud.Class;
 }

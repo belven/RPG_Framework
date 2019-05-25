@@ -12,6 +12,9 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 
+#include "Group.h"
+#include "Stat.h"
+
 ARPGFrameworkCharacter::ARPGFrameworkCharacter()
 {
 	// Set size for player capsule
@@ -91,8 +94,37 @@ void ARPGFrameworkCharacter::Tick(float DeltaSeconds)
 	}
 }
 
+UStat* ARPGFrameworkCharacter::GetStatByName(FString statName)
+{
+	for (UStat* stat : stats) {
+		if (stat->GetStatName().Equals(statName))
+			return stat;
+	}
+	return NewObject<UStat>();
+}
+
+float ARPGFrameworkCharacter::GetCurrentHealth()
+{
+	//return GetStatByName("CurrentHealth")->getMa;
+	return 0;
+}
+
+void ARPGFrameworkCharacter::SetCurrentHealth(float val)
+{
+
+}
+
+float ARPGFrameworkCharacter::GetMaxHealth()
+{
+	return 0;	
+}
+
+void ARPGFrameworkCharacter::SetMaxHealth(float val)
+{
+
+}
+
 void ARPGFrameworkCharacter::MaximiseStats()
 {
 	SetCurrentHealth(GetMaxHealth());
-	SetCurrentShield(GetMaxShield());
 }
