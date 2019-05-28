@@ -3,3 +3,7 @@
 
 #include "Weapon.h"
 
+FWeaponSpecification UWeapon::GetWeaponSpecification()
+{
+	return weaponSpecification;
+}

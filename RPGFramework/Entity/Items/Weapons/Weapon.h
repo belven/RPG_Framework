@@ -9,12 +9,11 @@
 
 UENUM(BlueprintType)
 enum class  EWeaponType : uint8 {
-	MELEE_AMMO,
-	MELEE,
-	RANGED_HEAT,
-	RANGED_AMMO,
-	RANGED
+	NORMAL,
+	AMMO,
+	HEAT
 };
+
 
 USTRUCT(BlueprintType)
 struct FWeaponSpecification : public FTableRowBase
@@ -22,11 +21,8 @@ struct FWeaponSpecification : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		int weaponSpecificationID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		FText weaponName;
-
+		int itemSpecificationID;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
 		EWeaponType weaponType;
 
@@ -37,7 +33,43 @@ public:
 		float healthChange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float useRange;
+		float range;
+};
+
+USTRUCT(BlueprintType)
+struct FAmmoWeaponSpecification : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		int weaponSpecificationID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float maxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float reloadSpeed;
+};
+
+USTRUCT(BlueprintType)
+struct FHeatWeaponSpecification : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		int weaponSpecificationID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float maxHeat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float heatGenerated;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float passiveHeatLoss;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		float overheatCooldown;
 };
 
 UCLASS()
@@ -51,8 +83,8 @@ private:
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
-		FWeaponSpecification GetWeaponSpecification() { return weaponSpecification; }
+		FWeaponSpecification GetWeaponSpecification();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
-		void SetWeaponSpecification(FWeaponSpecification val) { weaponSpecification = val; }
+		void SetWeaponSpecification(FWeaponSpecification val) {  }
 };

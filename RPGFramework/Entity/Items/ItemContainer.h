@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Item.h"
 #include "ItemContainer.generated.h"
 
 class UItem;
@@ -13,6 +14,6 @@ class RPGFRAMEWORK_API UItemContainer : public UObject
 {
 	GENERATED_BODY()
 public:
-	TArray<UItem*> items;
+	TArray<FItemSpecification> items;
 	
 };

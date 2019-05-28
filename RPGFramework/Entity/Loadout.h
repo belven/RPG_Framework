@@ -14,14 +14,14 @@ struct FLoadout : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
-		int loadoutID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
 		float maxHealth = 2000;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
 		float maxSpeed = 100;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
+		TArray<int32> weaponIDs;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
 		FWeaponSpecification weaponSpecification;
 };

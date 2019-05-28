@@ -10,6 +10,17 @@
 class UGroup;
 class UStat;
 
+UENUM(BlueprintType)
+enum class  EPosition : uint8 {
+	LEFT_LEG,
+	RIGHT_LEG,
+	LEFT_SHOULDER,
+	RIGHT_SHOULDER,
+	LEFT_ARM,
+	RIGHT_ARM
+};
+
+
 UCLASS(Blueprintable)
 class ARPGFrameworkCharacter : public ACharacter
 {
@@ -69,6 +80,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Name")
 		void SetCharacterName(FText val) { characterName = val; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		TMap<EPosition, UWeapon *> GetWeapons() { return weapons; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		void SetWeapons(TMap<EPosition, UWeapon *> val) { weapons = val; }
+
+	UFUNCTION(BlueprintCallable, Category = "Armour")
+		TMap<EPosition, UArmour *> GetArmour() { return armour; }
+
+	UFUNCTION(BlueprintCallable, Category = "Armour")
+		void SetArmour(TMap<EPosition, UArmour *> val) { armour = val; }
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -87,6 +110,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Name")
 		TArray<UStat*> stats;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+		TMap<EPosition, UWeapon*> weapons;
+
+	UPROPERTY(EditAnywhere, Category = "Armour")
+		TMap<EPosition, UArmour*> armour;
 
 	UPROPERTY(EditAnywhere, Category = "Name")
 		FText characterName;
