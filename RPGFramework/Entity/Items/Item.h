@@ -48,4 +48,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Specification")
 		void SetItemSpecification(FItemSpecification val) { itemSpecification = val; }
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+		static UItem* CreateItem(int32 itemID, FItemSpecification inItemSpecification);
 };

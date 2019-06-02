@@ -22,7 +22,7 @@ struct FWeaponSpecification : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
 		int itemSpecificationID;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
 		EWeaponType weaponType;
 
@@ -72,6 +72,8 @@ public:
 		float overheatCooldown;
 };
 
+class UDataTable;
+
 UCLASS()
 class RPGFRAMEWORK_API UWeapon : public UItem
 {
@@ -80,11 +82,17 @@ class RPGFRAMEWORK_API UWeapon : public UItem
 private:
 	FWeaponSpecification weaponSpecification;
 
+	static UDataTable* weaponTable;
+
+	static FWeaponSpecification* GetWeaponSpecificationForItem(int32 itemID);
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
 		FWeaponSpecification GetWeaponSpecification();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
-		void SetWeaponSpecification(FWeaponSpecification val) {  }
+		void SetWeaponSpecification(FWeaponSpecification val) { weaponSpecification = val; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		static UWeapon* CreateWeapon(int32 itemID, FItemSpecification weaponSpecification);
 };

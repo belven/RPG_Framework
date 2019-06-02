@@ -14,4 +14,6 @@ class RPGFRAMEWORK_API UArmour : public UItem
 {
 	GENERATED_BODY()
 	
+public:
+	static UArmour* CreateArmour(int32 itemID, FItemSpecification armourSpecification);
 };
