@@ -11,7 +11,7 @@ UArmour* UArmour::CreateArmour(int32 itemID, FItemSpecification armourItemSpecif
 
 
 	for (FArmourSpecification* armourSpec : UDataTables::GetInstance()->GetArmour()) {
-		if (armourSpec->itemID = itemID) {
+		if (armourSpec->itemID == itemID) {
 			armour->SetArmourSpecification(armourSpec);
 		}
 	}
@@ -27,10 +27,10 @@ void UArmour::GetArmourSpecification(int32 itemID, UArmour* armour)
 	UDataTable* armourTable = UDataTables::GetInstance()->GetArmourTable();
 
 	for (FName armourID : armourTable->GetRowNames()) {
-		FArmourSpecification* armourSpec = armourTable->FindRow<FArmourSpecification>(armourID, *armourIDText, true);
+		FArmourSpecification* armourSpec = armourTable->FindRow<FArmourSpecification>(armourID, ContextString, true);
 
 		if (armourSpec != nullptr) {
-			if (armourSpec->itemID = itemID) {
+			if (armourSpec->itemID == itemID) {
 				armour->SetArmourSpecification(armourSpec);
 				GetArmourValuesForArmour(armour, armourID);
 				break;
