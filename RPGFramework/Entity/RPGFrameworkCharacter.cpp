@@ -11,11 +11,12 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "Items/ItemContainer.h"
 
 #include "Group.h"
 #include "Stat.h"
-
-
+#include "DataTables.h"
+#include "Items/Weapons/Weapon.h"
 
 const FText ARPGFrameworkCharacter::healthStatName = GetTextFromLiteral(TEXT("Health"));
 
@@ -65,11 +66,34 @@ ARPGFrameworkCharacter::ARPGFrameworkCharacter()
 
 	AddStat(UStat::CreateStat(ARPGFrameworkCharacter::healthStatName, 1000, 1000));
 
-	MaximiseStats();	
+	MaximiseStats();
+
+
+	for (FItemSpecification* spec : UDataTables::GetInstance()->GetItems()) {
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *spec->name.ToString());
+	}
 }
 
-void ARPGFrameworkCharacter::SetupWithLoadout(FLoadout loadout) {
+void ARPGFrameworkCharacter::SetupWithLoadout(int32 loadoutID) {
+	FLoadout* ourloadout = nullptr;
 
+	for (FLoadout* loadout : UDataTables::GetInstance()->GetLoadouts()) {
+		if (loadout->characterID == this->ID) {
+			ourloadout = loadout;
+		}
+	}
+
+	SetMaxHealth(ourloadout->maxHealth);
+
+	for (TPair<EPosition, int32>& weaponPosition : ourloadout->equippedWeapons) {
+		TPair<EPosition, UWeapon*> weaponPair;
+		weaponPair.Key = weaponPosition.Key;
+		weaponPair.Value = Cast<UWeapon>(UItemContainer::LoadItem(weaponPosition.Value));
+
+		GetWeapons().Add(weaponPair);
+	}
+
+	MaximiseStats();
 }
 
 void ARPGFrameworkCharacter::Tick(float DeltaSeconds)

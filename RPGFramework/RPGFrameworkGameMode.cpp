@@ -5,6 +5,7 @@
 #include "Entity/RPGFrameworkCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "UI/RPGHUD.h"
+#include <Kismet/GameplayStatics.h>
 
 ARPGFrameworkGameMode::ARPGFrameworkGameMode()
 {
@@ -18,7 +19,17 @@ ARPGFrameworkGameMode::ARPGFrameworkGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<AHUD> hud(TEXT("/Game/TopDown/Blueprints/UI/MainHUD.MainHUD_C"));
-	// set default pawn class to our character class
+	static ConstructorHelpers::FClassFinder<AHUD> hud(TEXT("Blueprint'/Game/TopDownCPP/UI/MainHUD.MainHUD_C'"));
 	HUDClass = hud.Class;
+}
+
+void ARPGFrameworkGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ARPGFrameworkCharacter* player = Cast<ARPGFrameworkCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	if (player != NULL) {
+		//hudWidget = CreateWidget<UUserWidget>(GetWorld(), HUDClass);
+	}
 }

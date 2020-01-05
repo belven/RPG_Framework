@@ -4,22 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Loadout.h"
 #include "RPGFrameworkCharacter.generated.h"
 
 class UGroup;
 class UStat;
-
-UENUM(BlueprintType)
-enum class  EPosition : uint8 {
-	LEFT_LEG,
-	RIGHT_LEG,
-	LEFT_SHOULDER,
-	RIGHT_SHOULDER,
-	LEFT_ARM,
-	RIGHT_ARM
-};
-
 
 UCLASS(Blueprintable)
 class ARPGFrameworkCharacter : public ACharacter
@@ -31,7 +19,7 @@ public:
 	ARPGFrameworkCharacter();
 
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
-		void SetupWithLoadout(FLoadout loadout);
+		void SetupWithLoadout(int32 loadoutID);
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
@@ -93,6 +81,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Armour")
 		void SetArmour(TMap<EPosition, UArmour *> val) { armour = val; }
 private:
+
+	UPROPERTY(EditAnywhere, Category = "ID")
+		int32 ID;
+
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* TopDownCameraComponent;

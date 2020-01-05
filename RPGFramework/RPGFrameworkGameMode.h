@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include <UserWidget.h>
 #include "RPGFrameworkGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -13,6 +14,9 @@ class ARPGFrameworkGameMode : public AGameModeBase
 
 public:
 	ARPGFrameworkGameMode();
+	void BeginPlay() override;
+private:
+	UUserWidget * hudWidget;
 };
 
 

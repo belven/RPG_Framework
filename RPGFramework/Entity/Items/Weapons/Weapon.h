@@ -3,76 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Entity/Items/Item.h"
-#include "Engine/DataTable.h"
+#include "DataTables.h"
+#include "../Item.h"
 #include "Weapon.generated.h"
-
-UENUM(BlueprintType)
-enum class  EWeaponType : uint8 {
-	NORMAL,
-	AMMO,
-	HEAT
-};
-
-
-USTRUCT(BlueprintType)
-struct FWeaponSpecification : public FTableRowBase
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		int itemSpecificationID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		EWeaponType weaponType;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float useRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float healthChange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float range;
-};
-
-USTRUCT(BlueprintType)
-struct FAmmoWeaponSpecification : public FTableRowBase
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		int weaponSpecificationID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float maxAmmo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float reloadSpeed;
-};
-
-USTRUCT(BlueprintType)
-struct FHeatWeaponSpecification : public FTableRowBase
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		int weaponSpecificationID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float maxHeat;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float heatGenerated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float passiveHeatLoss;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
-		float overheatCooldown;
-};
-
-class UDataTable;
 
 UCLASS()
 class RPGFRAMEWORK_API UWeapon : public UItem
@@ -81,12 +14,9 @@ class RPGFRAMEWORK_API UWeapon : public UItem
 
 private:
 	FWeaponSpecification weaponSpecification;
-
-	static UDataTable* weaponTable;
-
 	static FWeaponSpecification* GetWeaponSpecificationForItem(int32 itemID);
-public:
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
 		FWeaponSpecification GetWeaponSpecification();
 

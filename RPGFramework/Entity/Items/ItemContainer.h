@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Item.h"
 #include "ItemContainer.generated.h"
 
-class UItem;
 class UDataTable;
 
 UCLASS()
@@ -14,8 +14,8 @@ class RPGFRAMEWORK_API UItemContainer : public UObject
 {
 	GENERATED_BODY()
 public:
-	UItemContainer();
-	
+	TArray<FItemSpecification*> GetItemSpecifications();
+
 	UFUNCTION(BlueprintCallable, Category = "Item")
 		TArray<int32>& GetItems() { return items; }
 
@@ -23,7 +23,5 @@ public:
 
 private:
 	TArray<int32> items;
-
-	static UDataTable* itemTable;
 };
 
