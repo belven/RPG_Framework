@@ -9,6 +9,8 @@
 
 UENUM(BlueprintType)
 enum class  EPosition : uint8 {
+	HEAD,
+	CHEST,
 	LEFT_LEG,
 	RIGHT_LEG,
 	LEFT_SHOULDER,
@@ -36,6 +38,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
 		TMap<EPosition, int32> equippedWeapons;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Loadout")
+		TArray<int32> equippedArmour;
 };
 
 UENUM(BlueprintType)
@@ -213,8 +218,9 @@ public:
 	static UDataTables* GetInstance();
 
 	TArray<FItemSpecification*> GetItems();
-
 	TArray<FWeaponSpecification*> GetWeapons();
+	TArray<FHeatWeaponSpecification*> GetHeatWeapons();
+	TArray<FAmmoWeaponSpecification*> GetAmmoWeapons();
 	TArray<FArmourSpecification*> GetArmour();
 	TArray<FArmourValue*> GetArmourValues();
 	TArray<FLoadout*> GetLoadouts();
@@ -236,10 +242,18 @@ public:
 
 	UDataTable* GetArmourValuesTable() { return armourValuesTable; }
 	void SetArmourValuesTable(UDataTable* val) { armourValuesTable = val; }
+
+	UDataTable* GetHeatWeaponTable() { return heatWeaponTable; }
+	void SetHeatWeaponTable(UDataTable* val) { heatWeaponTable = val; }
+
+	UDataTable* GetAmmoWeaponTable() { return ammoWeaponTable; }
+	void SetAmmoWeaponTable(UDataTable* val) { ammoWeaponTable = val; }
 private:
 	static UDataTables* INSTANCE;
 	UDataTable* itemTable;
 	UDataTable* weaponTable;
+	UDataTable* heatWeaponTable;
+	UDataTable* ammoWeaponTable;
 	UDataTable* loadoutTable;
 	UDataTable* abilitiesTable;
 	UDataTable* armourTable;

@@ -13,16 +13,12 @@ class RPGFRAMEWORK_API UWeapon : public UItem
 	GENERATED_BODY()
 
 private:
-	FWeaponSpecification weaponSpecification;
-	static FWeaponSpecification* GetWeaponSpecificationForItem(int32 itemID);
+	FWeaponSpecification * weaponSpecification;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
-		FWeaponSpecification GetWeaponSpecification();
+	static UWeapon* CreateWeapon(int32 itemID, FItemSpecification weaponSpecification);
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon Specification")
-		void SetWeaponSpecification(FWeaponSpecification val) { weaponSpecification = val; }
+	FWeaponSpecification * GetWeaponSpecification() { return weaponSpecification; }
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-		static UWeapon* CreateWeapon(int32 itemID, FItemSpecification weaponSpecification);
+	void SetWeaponSpecification(FWeaponSpecification * val) { weaponSpecification = val; }
 };

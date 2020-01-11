@@ -17,6 +17,7 @@
 #include "Stat.h"
 #include "DataTables.h"
 #include "Items/Weapons/Weapon.h"
+#include "Items/Armour/Armour.h"
 
 const FText ARPGFrameworkCharacter::healthStatName = GetTextFromLiteral(TEXT("Health"));
 
@@ -68,10 +69,16 @@ ARPGFrameworkCharacter::ARPGFrameworkCharacter()
 
 	MaximiseStats();
 
+	this->ID = 0;
 
-	for (FItemSpecification* spec : UDataTables::GetInstance()->GetItems()) {
+	/*for (FItemSpecification* spec : UDataTables::GetInstance()->GetItems()) {
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *spec->name.ToString());
-	}
+	}*/
+}
+
+void ARPGFrameworkCharacter::BeginPlay()
+{
+	this->SetupWithLoadout(0);
 }
 
 void ARPGFrameworkCharacter::SetupWithLoadout(int32 loadoutID) {
@@ -80,20 +87,35 @@ void ARPGFrameworkCharacter::SetupWithLoadout(int32 loadoutID) {
 	for (FLoadout* loadout : UDataTables::GetInstance()->GetLoadouts()) {
 		if (loadout->characterID == this->ID) {
 			ourloadout = loadout;
+			break;
 		}
 	}
 
-	SetMaxHealth(ourloadout->maxHealth);
+	if (ourloadout != nullptr) {
+		SetMaxHealth(ourloadout->maxHealth);
 
-	for (TPair<EPosition, int32>& weaponPosition : ourloadout->equippedWeapons) {
-		TPair<EPosition, UWeapon*> weaponPair;
-		weaponPair.Key = weaponPosition.Key;
-		weaponPair.Value = Cast<UWeapon>(UItemContainer::LoadItem(weaponPosition.Value));
+		for (TPair<EPosition, int32>& weaponPosition : ourloadout->equippedWeapons) {
+			TPair<EPosition, UWeapon*> weaponPair;
+			weaponPair.Key = weaponPosition.Key;
+			weaponPair.Value = Cast<UWeapon>(UItemContainer::LoadItem(weaponPosition.Value));
 
-		GetWeapons().Add(weaponPair);
+			GetWeapons().Add(weaponPair);
+		}
+
+		for (int32 armourID : ourloadout->equippedArmour) {
+			UArmour* armourFound = Cast<UArmour>(UItemContainer::LoadItem(armourID));
+
+			if (armourFound != nullptr) {
+				TPair<EPosition, UArmour*> armourPair;
+				armourPair.Key = armourFound->GetArmourSpecification()->armourPosition;
+				armourPair.Value = armourFound;
+
+				GetArmour().Add(armourPair);
+			}
+		}
+
+		MaximiseStats();
 	}
-
-	MaximiseStats();
 }
 
 void ARPGFrameworkCharacter::Tick(float DeltaSeconds)
@@ -166,7 +188,6 @@ void ARPGFrameworkCharacter::SetMaxHealth(float val)
 {
 	GetHealthStat()->SetMaxValue(val);
 }
-
 void ARPGFrameworkCharacter::MaximiseStats()
 {
 	SetCurrentHealth(GetMaxHealth());

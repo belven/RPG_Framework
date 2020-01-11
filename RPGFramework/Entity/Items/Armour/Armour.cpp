@@ -8,8 +8,7 @@ UArmour* UArmour::CreateArmour(int32 itemID, FItemSpecification armourItemSpecif
 	armour->SetItemSpecification(armourItemSpecification);
 
 	GetArmourSpecification(itemID, armour);
-
-
+	
 	for (FArmourSpecification* armourSpec : UDataTables::GetInstance()->GetArmour()) {
 		if (armourSpec->itemID == itemID) {
 			armour->SetArmourSpecification(armourSpec);
@@ -41,8 +40,10 @@ void UArmour::GetArmourSpecification(int32 itemID, UArmour* armour)
 
 void UArmour::GetArmourValuesForArmour(UArmour* armour, FName armourID)
 {
+	int32 armourIDint = FCString::Atoi(*armourID.ToString());
+
 	for (FArmourValue* armourValue : UDataTables::GetInstance()->GetArmourValues()) {
-		if (armourValue->armourID = FCString::Atoi(*armourID.ToString())) {
+		if (armourValue->armourID == armourIDint) {
 			armour->GetArmourValues().Add(armourValue);
 		}
 	}

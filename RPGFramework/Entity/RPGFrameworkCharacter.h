@@ -76,7 +76,7 @@ public:
 		void SetWeapons(TMap<EPosition, UWeapon *> val) { weapons = val; }
 
 	UFUNCTION(BlueprintCallable, Category = "Armour")
-		TMap<EPosition, UArmour *> GetArmour() { return armour; }
+		TMap<EPosition, UArmour *>& GetArmour() { return armour; }
 
 	UFUNCTION(BlueprintCallable, Category = "Armour")
 		void SetArmour(TMap<EPosition, UArmour *> val) { armour = val; }
@@ -96,6 +96,8 @@ private:
 	/** A decal that projects to the cursor location. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Group")
 		UGroup* group;

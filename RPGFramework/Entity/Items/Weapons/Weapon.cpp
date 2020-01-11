@@ -4,30 +4,43 @@
 #include "Weapon.h"
 #include "DataTables.h"
 #include <Engine/DataTable.h>
+#include "HeatWeapon.h"
 
-FWeaponSpecification* UWeapon::GetWeaponSpecificationForItem(int32 itemID)
-{
-	static const FString ContextString(TEXT("GENERAL"));
-	FName weaponIDText = *FString::Printf(TEXT("%d"), itemID);
-	
-	for (FWeaponSpecification* weaponSpec : UDataTables::GetInstance()->GetWeapons()) {
-		if (weaponSpec->itemSpecificationID == itemID)
-			return weaponSpec;
-	}
-
-	return nullptr;
-}
-
-FWeaponSpecification UWeapon::GetWeaponSpecification()
-{
-	return weaponSpecification;
-}
 
 UWeapon* UWeapon::CreateWeapon(int32 itemID, FItemSpecification itemSpecification)
 {
-	UWeapon* weapon = NewObject<UWeapon>();
-	GetWeaponSpecificationForItem(itemID);
+	UWeapon* weapon = nullptr;
 
-	weapon->SetItemSpecification(itemSpecification);
+	static const FString ContextString(TEXT("GENERAL"));
+
+	UDataTable* weaponTable = UDataTables::GetInstance()->GetWeaponTable();
+
+	for (FName weaponID : weaponTable->GetRowNames()) {
+		FWeaponSpecification* weaponSpec = weaponTable->FindRow<FWeaponSpecification>(weaponID, ContextString, true);
+
+		int32 weaponDint = FCString::Atoi(*weaponID.ToString());
+
+		if (weaponSpec != nullptr) {
+			if (weaponSpec->itemSpecificationID == itemID) {
+				switch (weaponSpec->weaponType) {
+				case EWeaponType::NORMAL: {
+					weapon = NewObject<UWeapon>();
+					weapon->SetItemSpecification(itemSpecification);
+					weapon->SetWeaponSpecification(weaponSpec);
+					break;
+				}
+				case EWeaponType::AMMO: {
+				}
+				case EWeaponType::HEAT: {
+					weapon = UHeatWeapon::CreateHeatWeapon(weaponDint);
+					break;
+				}
+				}
+				break;
+			}
+		}
+	}
+
+
 	return weapon;
 }
