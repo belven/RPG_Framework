@@ -17,6 +17,23 @@ void ARPGFrameworkPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
+	FHitResult Hit;
+	Hit = GetHitFromCursor();
+
+	if (Hit.bBlockingHit)
+	{
+		actorUnderCursor = Hit.GetActor();
+
+		if (actorUnderCursor != nullptr)
+		{
+			CurrentMouseCursor = EMouseCursor::Crosshairs;
+		}
+		else
+		{
+			CurrentMouseCursor = EMouseCursor::Hand;
+		}
+	}
+
 	// keep updating the destination every tick while desired
 	if (bMoveToMouseCursor)
 	{
@@ -24,63 +41,47 @@ void ARPGFrameworkPlayerController::PlayerTick(float DeltaTime)
 	}
 }
 
+FHitResult ARPGFrameworkPlayerController::GetHitFromCursor(ECollisionChannel channel)
+{
+	static FHitResult Hit;
+	GetHitResultUnderCursor(channel, true, Hit);
+	return Hit;
+}
+
 void ARPGFrameworkPlayerController::SetupInputComponent()
 {
-	// set up gameplay key bindings
+	// set up game play key bindings
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &ARPGFrameworkPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ARPGFrameworkPlayerController::OnSetDestinationReleased);
 
-	// support touch devices 
-	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ARPGFrameworkPlayerController::MoveToTouchLocation);
-	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &ARPGFrameworkPlayerController::MoveToTouchLocation);
-
-	InputComponent->BindAction("ResetVR", IE_Pressed, this, &ARPGFrameworkPlayerController::OnResetVR);
+	InputComponent->BindAction("InteractWithTarget", IE_Pressed, this, &ARPGFrameworkPlayerController::InteractWithTarget);
 }
 
-void ARPGFrameworkPlayerController::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+void ARPGFrameworkPlayerController::InteractWithTarget() {
+	if (actorUnderCursor != nullptr) {
+		ARPGFrameworkCharacter* owner = Cast<ARPGFrameworkCharacter>(GetPawn());
+
+		if (owner != nullptr) {
+			ARPGFrameworkCharacter* target = Cast<ARPGFrameworkCharacter>(actorUnderCursor);
+			if (target != nullptr) {
+				owner->InteractWithTarget(target);
+			}
+		}
+	}
 }
 
 void ARPGFrameworkPlayerController::MoveToMouseCursor()
 {
-	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-	{
-		if (ARPGFrameworkCharacter* MyPawn = Cast<ARPGFrameworkCharacter>(GetPawn()))
-		{
-			if (MyPawn->GetCursorToWorld())
-			{
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
-			}
-		}
-	}
-	else
-	{
-		// Trace to see what is under the mouse cursor
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+	// Trace to see what is under the mouse cursor
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
 
-		if (Hit.bBlockingHit)
-		{
-			// We hit something, move there
-			SetNewMoveDestination(Hit.ImpactPoint);
-		}
-	}
-}
-
-void ARPGFrameworkPlayerController::MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	FVector2D ScreenSpaceLocation(Location);
-
-	// Trace to see what is under the touch location
-	FHitResult HitResult;
-	GetHitResultAtScreenPosition(ScreenSpaceLocation, CurrentClickTraceChannel, true, HitResult);
-	if (HitResult.bBlockingHit)
+	if (Hit.bBlockingHit)
 	{
 		// We hit something, move there
-		SetNewMoveDestination(HitResult.ImpactPoint);
+		SetNewMoveDestination(Hit.ImpactPoint);
 	}
 }
 

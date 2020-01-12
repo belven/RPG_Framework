@@ -69,6 +69,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
 		float range;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Specification")
+		bool heals;
 };
 
 USTRUCT(BlueprintType)

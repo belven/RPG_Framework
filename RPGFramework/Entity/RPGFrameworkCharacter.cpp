@@ -159,6 +159,21 @@ UStat* ARPGFrameworkCharacter::GetStatByName(FText statName)
 	return NewObject<UStat>();
 }
 
+void ARPGFrameworkCharacter::ChangeHealth(float healthChange, bool heals)
+{
+	// Need to add in armour damage reduction
+	float healthChangeAmout;
+
+	if (!heals) {
+		healthChangeAmout = -healthChange;
+	}
+	else {
+		healthChangeAmout = healthChange;
+	}
+
+	SetCurrentHealth(GetCurrentHealth() - healthChangeAmout);
+}
+
 float ARPGFrameworkCharacter::GetCurrentHealth()
 {
 	return GetHealthStat()->GetCurrentValue();
@@ -188,6 +203,7 @@ void ARPGFrameworkCharacter::SetMaxHealth(float val)
 {
 	GetHealthStat()->SetMaxValue(val);
 }
+
 void ARPGFrameworkCharacter::MaximiseStats()
 {
 	SetCurrentHealth(GetMaxHealth());
@@ -197,4 +213,28 @@ void ARPGFrameworkCharacter::AddStat(UStat* newStat)
 {
 	if (GetStatByName(newStat->GetStatName()) == NULL)
 		GetStats().Add(newStat);
+}
+
+bool ARPGFrameworkCharacter::IsAlive()
+{
+	return GetCurrentHealth() > 0;
+}
+
+void ARPGFrameworkCharacter::InteractWithTarget(ARPGFrameworkCharacter* target)
+{
+	// Assumed Enemy for now. Need to implement friend foe system
+	if (CanAttack() && IsAlive() && target->IsAlive()) {
+		TArray<UWeapon*> weapons;
+
+		equipedWeapons.GenerateValueArray(weapons);
+		
+		for (UWeapon* weapon : weapons) {
+			weapon->AttackTarget(target);
+		}
+	}
+}
+
+bool ARPGFrameworkCharacter::CanAttack()
+{
+	return equipedWeapons.Num() > 0;
 }

@@ -70,16 +70,17 @@ public:
 		void SetCharacterName(FText val) { characterName = val; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-		TMap<EPosition, UWeapon *> GetWeapons() { return weapons; }
+		TMap<EPosition, UWeapon *> GetWeapons() { return equipedWeapons; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-		void SetWeapons(TMap<EPosition, UWeapon *> val) { weapons = val; }
+		void SetWeapons(TMap<EPosition, UWeapon *> val) { equipedWeapons = val; }
 
 	UFUNCTION(BlueprintCallable, Category = "Armour")
 		TMap<EPosition, UArmour *>& GetArmour() { return armour; }
 
 	UFUNCTION(BlueprintCallable, Category = "Armour")
 		void SetArmour(TMap<EPosition, UArmour *> val) { armour = val; }
+	void ChangeHealth(float healthChange, bool heals);
 private:
 
 	UPROPERTY(EditAnywhere, Category = "ID")
@@ -106,7 +107,7 @@ private:
 		TArray<UStat*> stats;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
-		TMap<EPosition, UWeapon*> weapons;
+		TMap<EPosition, UWeapon*> equipedWeapons;
 
 	UPROPERTY(EditAnywhere, Category = "Armour")
 		TMap<EPosition, UArmour*> armour;
@@ -119,4 +120,9 @@ private:
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 		void AddStat(UStat* newStat);
+	bool IsAlive();
+public:
+	void InteractWithTarget(ARPGFrameworkCharacter* target);
+private:
+	bool CanAttack();
 };

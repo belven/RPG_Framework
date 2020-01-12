@@ -5,6 +5,7 @@
 #include "DataTables.h"
 #include <Engine/DataTable.h>
 #include "HeatWeapon.h"
+#include "../../RPGFrameworkCharacter.h"
 
 
 UWeapon* UWeapon::CreateWeapon(int32 itemID, FItemSpecification itemSpecification)
@@ -41,6 +42,23 @@ UWeapon* UWeapon::CreateWeapon(int32 itemID, FItemSpecification itemSpecificatio
 		}
 	}
 
-
 	return weapon;
+}
+
+bool UWeapon::CanAttack() {
+	return true;
+}
+
+void UWeapon::FireWeapon(ARPGFrameworkCharacter* target)
+{
+	// Need to set up timers here to manage use rate
+	// Need to pass in damage type
+	target->ChangeHealth(weaponSpecification->healthChange, weaponSpecification->heals);
+}
+
+void UWeapon::AttackTarget(ARPGFrameworkCharacter* target)
+{
+	if (CanAttack()) {
+		FireWeapon(target);
+	}
 }

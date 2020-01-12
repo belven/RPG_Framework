@@ -15,23 +15,21 @@ public:
 	ARPGFrameworkPlayerController();
 
 protected:
+	AActor * actorUnderCursor;
+	
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
+	FHitResult GetHitFromCursor(ECollisionChannel channel = ECollisionChannel::ECC_Pawn);
 	virtual void SetupInputComponent() override;
+	void InteractWithTarget();
 	// End PlayerController interface
-
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
-
+	
 	/** Navigate player to the current mouse cursor location. */
 	void MoveToMouseCursor();
 
-	/** Navigate player to the current touch location. */
-	void MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location);
-	
 	/** Navigate player to the given world location. */
 	void SetNewMoveDestination(const FVector DestLocation);
 
